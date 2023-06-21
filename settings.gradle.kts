@@ -1,0 +1,1 @@
+rootProject.name = "ru.ooo_isk_a_plus.isk_a_plus"
