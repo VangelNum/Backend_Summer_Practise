@@ -5,13 +5,14 @@ import io.ktor.client.statement.*
 import io.ktor.server.testing.*
 import kotlin.test.*
 import io.ktor.http.*
-import ru.ooo_isk_a_plus.plugins.*
+import org.junit.Test
+import ru.ooo_isk_a_plus.routing.configureNewUserRouting
 
 class ApplicationTest {
     @Test
     fun testRoot() = testApplication {
         application {
-            configureRouting()
+            configureNewUserRouting()
         }
         client.get("/").apply {
             assertEquals(HttpStatusCode.OK, status)
