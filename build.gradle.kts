@@ -38,4 +38,5 @@ dependencies {
     implementation("org.jetbrains.exposed:exposed-jdbc:$exposed_version")
 
     implementation("org.postgresql:postgresql:42.6.0")
+    implementation("com.zaxxer:HikariCP:5.0.1")
 }
