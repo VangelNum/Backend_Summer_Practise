@@ -13,11 +13,10 @@ import ru.ooo_isk_a_plus.routing.configureRouting
 fun main() {
     embeddedServer(
         Netty,
-        port = 6654,
-        host = "containers-us-west-188.railway.app",
+        port = 8080,
+        host = "0.0.0.0",
         module = Application::module
-    )
-        .start(wait = true)
+    ).start(wait = true)
 }
 
 fun Application.module() {
