@@ -20,6 +20,12 @@ fun main() {
     }
     val dataSource = HikariDataSource(config)
     Database.connect(dataSource)
+//    Database.connect(
+//        url = "jdbc:postgresql://localhost:5432/iskadatabase",
+//        driver = "org.postgresql.Driver",
+//        user = "postgres",
+//        password = "Kefir13377"
+//    )
     embeddedServer(Netty, port = 8080) {
         configureRouting()
         configureListOfUsers()

@@ -18,7 +18,8 @@ fun Application.configureListOfUsers() {
                 UsersTable.selectAll().map {
                     User(
                         phone = it[UsersTable.phone],
-                        name = it[UsersTable.name]
+                        name = it[UsersTable.name],
+                        file = it[UsersTable.file]
                     )
                 }
             }
@@ -26,6 +27,3 @@ fun Application.configureListOfUsers() {
         }
     }
 }
-
-
-
