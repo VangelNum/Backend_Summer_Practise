@@ -6,5 +6,6 @@ object UsersTable : Table("users") {
     val phone = text("phone")
     val name = text("name")
     val file = text("file").nullable()
+    val fileExtension = text("fileExtension").nullable()
 }
 

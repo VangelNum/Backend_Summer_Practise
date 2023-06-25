@@ -14,6 +14,7 @@ import org.jetbrains.exposed.sql.insert
 import org.jetbrains.exposed.sql.select
 import org.jetbrains.exposed.sql.transactions.transaction
 import ru.ooo_isk_a_plus.database.UsersTable
+import java.io.File
 import java.util.Base64
 
 fun Application.configureNewUserRouting() {
@@ -23,7 +24,8 @@ fun Application.configureNewUserRouting() {
                 val multipart = call.receiveMultipart()
                 var phone = ""
                 var name = ""
-                var fileData = ""
+                var file: String? = null
+                var fileExtension : String? = null
 
                 multipart.forEachPart { part ->
                     when (part) {
@@ -35,8 +37,10 @@ fun Application.configureNewUserRouting() {
                         }
 
                         is PartData.FileItem -> {
-                            val fileBytes = part.streamProvider().readBytes()
-                            fileData = Base64.getEncoder().encodeToString(fileBytes)
+                            val fileName = part.originalFileName ?: "file"
+                            fileExtension = File(fileName).extension
+                            val bytes = part.streamProvider().readBytes()
+                            file = Base64.getEncoder().encodeToString(bytes)
                         }
 
                         else -> {}
@@ -62,7 +66,8 @@ fun Application.configureNewUserRouting() {
                     UsersTable.insert {
                         it[UsersTable.name] = name
                         it[UsersTable.phone] = phone
-                        it[UsersTable.file] = fileData
+                        it[UsersTable.file] = file
+                        it[UsersTable.fileExtension] = fileExtension
                     }
                 }
                 call.respond(HttpStatusCode.Created, "User created")
