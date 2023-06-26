@@ -14,7 +14,6 @@ import org.jetbrains.exposed.sql.insert
 import org.jetbrains.exposed.sql.select
 import org.jetbrains.exposed.sql.transactions.transaction
 import ru.ooo_isk_a_plus.database.UsersTable
-import java.io.File
 import java.util.Base64
 
 fun Application.configureNewUserRouting() {
@@ -25,8 +24,8 @@ fun Application.configureNewUserRouting() {
                 var phone = ""
                 var name = ""
                 var file: String? = null
-                var fileExtension : String? = null
-
+                var fileName: String? = null
+                var fileExtension: String? = null
                 multipart.forEachPart { part ->
                     when (part) {
                         is PartData.FormItem -> {
@@ -37,10 +36,10 @@ fun Application.configureNewUserRouting() {
                         }
 
                         is PartData.FileItem -> {
-                            val fileName = part.originalFileName ?: "file"
-                            fileExtension = File(fileName).extension
-                            val bytes = part.streamProvider().readBytes()
+                            val bytes = part.streamProvider().readAllBytes()
                             file = Base64.getEncoder().encodeToString(bytes)
+                            fileName = part.originalFileName
+                            fileExtension = part.contentType.toString()
                         }
 
                         else -> {}
@@ -48,7 +47,7 @@ fun Application.configureNewUserRouting() {
                     part.dispose()
                 }
 
-                val isValidPhone = validatePhone(phone)
+                val isValidPhone = validatePhoneNumber(phone)
                 if (!isValidPhone) {
                     call.respond(HttpStatusCode.BadRequest, "Wrong phone number")
                     return@post
@@ -67,6 +66,7 @@ fun Application.configureNewUserRouting() {
                         it[UsersTable.name] = name
                         it[UsersTable.phone] = phone
                         it[UsersTable.file] = file
+                        it[UsersTable.fileName] = fileName
                         it[UsersTable.fileExtension] = fileExtension
                     }
                 }
@@ -79,7 +79,8 @@ fun Application.configureNewUserRouting() {
 }
 
 
-fun validatePhone(phoneNumber: String): Boolean {
-    val regex = Regex("^7\\d{10}$")
-    return regex.matches(phoneNumber)
+fun validatePhoneNumber(phoneNumber: String): Boolean {
+    val cleanedPhoneNumber = phoneNumber.replace("\\s".toRegex(), "")
+    val regex = Regex("^\\+7\\d{10}$")
+    return regex.matches(cleanedPhoneNumber)
 }

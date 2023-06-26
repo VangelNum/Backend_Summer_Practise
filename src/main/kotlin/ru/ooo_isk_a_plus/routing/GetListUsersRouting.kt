@@ -20,6 +20,7 @@ fun Application.configureListOfUsers() {
                         phone = it[UsersTable.phone],
                         name = it[UsersTable.name],
                         file = it[UsersTable.file],
+                        fileName = it[UsersTable.fileName],
                         fileExtension = it[UsersTable.fileExtension]
                     )
                 }

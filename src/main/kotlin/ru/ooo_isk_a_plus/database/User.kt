@@ -7,5 +7,6 @@ data class User(
     val phone: String,
     val name: String,
     val file: String? = null,
+    val fileName: String? = null,
     val fileExtension: String? = null
 )
