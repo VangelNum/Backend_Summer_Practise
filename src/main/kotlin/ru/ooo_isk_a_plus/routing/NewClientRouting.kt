@@ -14,6 +14,7 @@ import org.jetbrains.exposed.sql.insert
 import org.jetbrains.exposed.sql.select
 import org.jetbrains.exposed.sql.transactions.transaction
 import ru.ooo_isk_a_plus.database.UsersTable
+import java.io.ByteArrayOutputStream
 import java.util.Base64
 
 fun Application.configureNewUserRouting() {
@@ -36,8 +37,12 @@ fun Application.configureNewUserRouting() {
                         }
 
                         is PartData.FileItem -> {
-                            val bytes = part.streamProvider().readAllBytes()
-                            file = Base64.getEncoder().encodeToString(bytes)
+                            val bytes = ByteArrayOutputStream()
+                            part.streamProvider().use { input ->
+                                input.copyTo(bytes)
+                            }
+                            val base64String = Base64.getEncoder().encodeToString(bytes.toByteArray())
+                            file = base64String
                             fileName = part.originalFileName
                             fileExtension = part.contentType.toString()
                         }
