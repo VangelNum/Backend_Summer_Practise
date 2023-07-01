@@ -6,6 +6,7 @@ import io.ktor.server.engine.embeddedServer
 import io.ktor.server.netty.Netty
 import org.jetbrains.exposed.sql.Database
 import ru.ooo_isk_a_plus.plugins.configureSerialization
+import ru.ooo_isk_a_plus.routing.configureDeleteUserRouting
 import ru.ooo_isk_a_plus.routing.configureListOfUsers
 import ru.ooo_isk_a_plus.routing.configureNewUserRouting
 import ru.ooo_isk_a_plus.routing.configureRouting
@@ -26,8 +27,9 @@ fun main() {
 //        user = "postgres",
 //        password = "Kefir13377"
 //    )
-    embeddedServer(Netty, port = 8080) {
+    embeddedServer(Netty, host = "0.0.0.0", port = 8080) {
         configureRouting()
+        configureDeleteUserRouting()
         configureListOfUsers()
         configureNewUserRouting()
         configureSerialization()

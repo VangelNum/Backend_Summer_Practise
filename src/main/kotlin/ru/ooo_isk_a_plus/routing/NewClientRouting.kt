@@ -86,6 +86,6 @@ fun Application.configureNewUserRouting() {
 
 fun validatePhoneNumber(phoneNumber: String): Boolean {
     val cleanedPhoneNumber = phoneNumber.replace("\\s".toRegex(), "")
-    val regex = Regex("^\\+7\\d{10}$")
+    val regex = Regex("7\\d{10}$")
     return regex.matches(cleanedPhoneNumber)
 }
